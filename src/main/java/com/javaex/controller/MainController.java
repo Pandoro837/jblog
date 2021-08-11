@@ -9,7 +9,6 @@ public class MainController {
 
 	@RequestMapping(value="/", method = {RequestMethod.GET, RequestMethod.POST})
 	public String main() {
-		System.out.println("main");
 		return "/main/index";
 	}
 	
