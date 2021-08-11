@@ -9,13 +9,14 @@
 		<result column="password" property="password"/>
 		<result column="join_date" property="joinDate"/>
 	</resultMap>
-
+	
+	<!-- 회원가입 -->
 	<insert id="insertUser" parameterType="UserVo">
 		<![CDATA[
 			INSERT INTO users 
 			VALUES(
 				seq_users_no.NEXTVAL
-				,#{userId}
+				,#{id}
 				,#{userName}
 				,#{password}
 				,SYSDATE
@@ -23,6 +24,7 @@
 		]]>
 	</insert>
 	
+	<!-- 아이디 중복체크 -->
 	<select id="selectId" parameterType="UserVo" resultMap="resultMapUserVo">
 		<![CDATA[
 			SELECT
@@ -32,5 +34,17 @@
 			WHERE id = #{id}
 		]]>
 	</select>
-
+	
+	<!-- 로그인 -->
+	<select id="selectLogin" parameterType="UserVo" resultMap="resultMapUserVo">
+		<![CDATA[
+			SELECT
+			    *
+			FROM
+			    users
+			WHERE id = #{id}
+			  AND password = #{password}
+		]]>
+	</select>
+	
 </mapper>

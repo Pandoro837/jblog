@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cate">
+
+	<resultMap type="CateVo" id="resultMapCateVo">
+		<result column="id" property="id"/>
+		<result column="cate_no" property="cateNo"/>
+		<result column="cate_name" property="cateName"/>
+		<result column="description" property="description"/>
+		<result column="reg_date" property="regDate"/>
+	</resultMap>
+
+	<!-- 카테고리 리스트 호출 -->
+	<select id="selectCateList" parameterType="String" resultMap="resultMapCateVo">
+		<![CDATA[
+			SELECT
+				 cate_no
+				,cate_name
+				,description
+			FROM
+				 category
+			WHERE id = #{id}
+			ORDER BY reg_date DESC
+		]]>
+	</select>
+
+	<!-- 카테고리 생성 -->
+	<insert id="insertCate" parameterType="CateVo">
+		<selectKey keyProperty="cateNo" resultType="int" order="BEFORE">
+			<![CDATA[
+				SELECT 
+					seq_category_no.NEXTVAL 
+				FROM 
+					DUAL
+			]]>
+		</selectKey>		
+		<![CDATA[
+			INSERT INTO category
+			VALUES(
+				 #{cateNo}
+				,#{id}
+				,#{cateName}
+				,#{description}
+				,SYSDATE
+			)
+		]]>
+	</insert>
+
+	<!-- 추가된 카테고리 호출 -->
+	<select id="selectCate" parameterType="int" resultMap="resultMapCateVo">
+		<![CDATA[
+			SELECT
+				 cate_no
+				,cate_name
+				,description
+			FROM
+				 category
+			WHERE cate_no = #{cateNo}
+		]]>
+	</select>
+	
+	<!-- 카테고리 삭제 -->
+	<delete id="deleteCate" parameterType="int">
+		<![CDATA[
+			DELETE category
+			WHERE cate_no = #{cateNo}
+		]]>
+	</delete>
+
+</mapper>
