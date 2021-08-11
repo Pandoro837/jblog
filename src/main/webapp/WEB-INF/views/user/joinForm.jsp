@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <title>JBlog</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/jblog.css">
-
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
 
 </head>
@@ -31,7 +30,7 @@
 		      			<td><button id="btnIdCheck" type="button">아이디체크</button></td>
 		      		</tr>
 		      		<tr>
-		      			<td id="tdMsg" colspan="2">사용할 수 있는 아이디 입니다.</td>
+		      			<td id="tdMsg" colspan="2"></td>
 		      		</tr> 
 		      		<tr>
 		      			<td><label for="txtPassword">패스워드</label> </td>
@@ -67,6 +66,10 @@
 </body>
 
 <script type="text/javascript">
+	
+	var checkedId = false;
+	console.log(checkedId);
+	
 	$( document ).ready(function(){
 		$("#tdMsg").hide();
 	})
@@ -75,7 +78,62 @@
 		console.log("id 중복체크 클릭")
 		
 		var id = $("#txtId").val();
-		console.log(id);
+		console.log(id);	
+		
+		if(id.length < 1) {
+			alert("아이디를 입력해주세요.")
+		} else {
+			userIdCheck(id);
+		}
+		
+	});
+	
+	$("#joinForm").on("submit", function(){
+		
+		//아이디 미입력 확인
+		var id = $("#txtId").val();
+		if(id.length < 1) {
+			alert("아이디를 입력 해주세요.")
+			return false;
+		}
+		
+		//아이디 중복 체크
+		if(checkedId == false) {
+			console.log(checkedId);
+			alert("아이디 중복 체크를 해주세요.");
+			return false;
+		}
+		
+		//패스워드 미입력 확인
+		var password = $("#txtPassword").val();
+		if(password.length < 1) {
+			alert("패스워드를 입력 해주세요.")
+			return false;
+		}
+		
+		//이름 미입력 확인
+		var name = $("#txtUserName").val();
+		if(name.length < 1) {
+			alert("이름을 입력 해주세요.")
+			return false;
+		}
+		
+		//약관동의 체크 여부
+		var agree = $("#chkAgree").is(":checked");
+		if(agree != true) {
+			alert("약관에 동의해주세요.");
+			return false;
+		}
+		
+		return true;
+		
+	});
+	
+</script>
+	
+<script type="text/javascript">
+
+	function userIdCheck(id){
 		
 		var check = { id : id };
 		
@@ -90,21 +148,25 @@
 	        dataType: "json",			//데이터를 받는 형식, 일반적인 java코드를 이해하지 못하기 때문에 json으로 번역하여 받는다
 	        success: function(idCheck) {
 	            // TODO : 결과로 받은 resultData로 작업 !
-	            console.log(idCheck);
+	            console.log(checkedId);
 	        	
 	        	if(idCheck == true) {
+	        		$("#tdMsg").text("사용할 수 있는 아이디 입니다.")
 	        		$("#tdMsg").show();
+	        		checkedId = true;
+	        		console.log(checkedId);
+	        		
 	        	} else if (idCheck == false) {
-	        		alert("다른 아이디로 가입해 주세요.");
+	        		$("#tdMsg").text("다른 아이디로 가입해 주세요.")
+	        		$("#tdMsg").show();
 	        	}
 	        	
-	        	//중복 체크 이후, 다시 아이디를 수정하려고 할 때 메세지 삭제
+	        	//중복 체크 이후, 다시 아이디를 수정하려고 할 때 메세지 변경
 	        	$("#txtId").on("click",function(){
 	        		$("#tdMsg").hide();
-	        		idCheck = false;
-	        		console.log(idCheck);
+	        		checkedId = false;
+	        		console.log(checkedId);
 	        	});
-	        	
 	        	
 	        },
 	        error: function(jqXHR, textStatus, errorThrown) {
@@ -112,8 +174,8 @@
 	            alert("업로드 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
 	        }
 		});
-		
-	});
+	}
+
 </script>
 	
 </html>

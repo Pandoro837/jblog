@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>JBlog</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/jblog.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
 
 </head>
 <body>
@@ -52,4 +53,40 @@
 	
 </body>
 
+<script type="text/javascript">
+	$(document).ready(function(){
+		console.log("화면 출력 대기");
+		$("#tdMsg").hide();
+		
+		if("${param.result}" === "fail"){
+			var result = "${param.result}";
+			console.log(result);
+			$("#tdMsg").show();
+		}
+		
+	});
+	
+	$("#loginForm > form").on("submit",function(){
+		//id 입력 확인
+		var id = $("#textId").val();
+		if(id.length < 1) {
+			$("#tdMsg").text("아이디를 입력해주세요.")
+			$("#tdMsg").show();
+			
+			return false;
+		}
+		//password 입력 확인
+		var password = $("#textPassword").val();
+		if(password.length < 1) {
+			$("#tdMsg").text("패스워드를 입력해주세요.")
+			$("#tdMsg").show();
+			
+			return false;
+		}
+		
+		return true;
+		
+	})
+	
+</script>
 </html>
