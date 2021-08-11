@@ -3,9 +3,13 @@
 <configuration>
 	<typeAliases>
 		<typeAlias alias="UserVo" type="com.javaex.vo.UserVo"/>
+		<typeAlias alias="BlogVo" type="com.javaex.vo.BlogVo"/>
+		<typeAlias alias="CateVo" type="com.javaex.vo.CateVo"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mappers/user.xml"/>
+		<mapper resource="mybatis/mappers/blog.xml"/>
+		<mapper resource="mybatis/mappers/cate.xml"/>
 		<!-- <mapper resource="" /> --> <!-- 필요에 따라 추가 가능 -->
 	</mappers>
 </configuration>
