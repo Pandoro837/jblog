@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+
+	<resultMap type="PostVo" id="resultMapPostVo">
+		<result column="post_no" property="postNo"/>
+		<result column="cate_no" property="cateNo"/>
+		<result column="post_title" property="postTitle"/>
+		<result column="post_content" property="postContent"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="user_name" property="userName"/>
+		<result column="id" property="id"/>
+	</resultMap>
+	
+	<!-- 포스트 저장 -->
+	<insert id="insertPost" parameterType="PostVo">
+		<![CDATA[
+			INSERT INTO post
+			VALUES(
+			     seq_post_no.NEXTVAL
+			    ,#{cateNo}
+			    ,#{postTitle}
+			    ,#{postContent}
+			    ,SYSDATE
+			)
+		]]>
+	</insert>
+	
+	<!-- 카테고리에 해당하는 최근 포스트 호출 -->
+	<select id="selectCrtPost" parameterType="int" resultMap="resultMapPostVo">
+		<![CDATA[
+			SELECT
+			     p.post_title
+			    ,p.post_content
+   			    ,TO_CHAR(p.reg_date,'YYYY/MM/DD') reg_date
+			    ,uc.user_name
+			    ,uc.id
+			FROM
+			    post p
+			    ,(SELECT
+			        c.cate_no
+			        ,u.user_name
+			        ,u.id
+			      FROM
+			         users u
+			        ,category c
+			      WHERE u.id = c.id) uc
+			WHERE p.cate_no = uc.cate_no
+			  AND p.cate_no = #{cateNo}
+			  AND p.reg_date = (SELECT
+			                        MAX(reg_date)
+			                    FROM
+			                        post
+			                    WHERE cate_no = #{cateNo})
+		]]>
+	</select>
+	
+	<!-- 해당 카테고리의 포스트 목록 -->
+	<select id="selectPostList" parameterType="int" resultMap="resultMapPostVo">
+		<![CDATA[
+			SELECT
+				 p.post_no
+				,p.cate_no
+			    ,p.post_title
+			    ,TO_CHAR(p.reg_date,'YYYY/MM/DD') reg_date
+			FROM
+			     post p
+			WHERE p.cate_no = #{cateNo}
+			ORDER BY p.reg_date DESC
+		]]>
+	</select>
+	
+	<!-- 선택한 포스트 호출 -->
+	<select id="selectPost" parameterType="int" resultMap="resultMapPostVo">
+		<![CDATA[
+			SELECT
+			     p.post_title
+			    ,p.post_content
+   			    ,TO_CHAR(p.reg_date,'YYYY/MM/DD') reg_date
+			    ,uc.user_name
+			    ,uc.id
+			FROM
+			    post p
+			    ,(SELECT
+			        c.cate_no
+			        ,u.user_name
+			        ,u.id
+			      FROM
+			         users u
+			        ,category c
+			      WHERE u.id = c.id) uc
+			WHERE p.cate_no = uc.cate_no
+			  AND p.post_no = #{postNo}
+		]]>
+	</select>
+	
+	<!-- 아이디로 가장 최근의 포스트 하나 호출 -->
+	<!-- <select id="selectCrtPost" parameterType="String" resultMap="resultMapPostVo">
+		<![CDATA[
+		SELECT
+		     p.post_title
+		    ,p.post_content
+		    ,p.reg_date
+		    ,p.cate_no
+		    ,uc.user_name
+		    ,uc.id
+		FROM
+		     post p
+		    ,(SELECT
+		        c.cate_no
+		        ,c.cate_name
+		        ,u.user_name
+		        ,u.id
+		      FROM
+		         users u
+		        ,category c
+		      WHERE u.id = c.id) uc
+		WHERE p.cate_no = uc.cate_no
+		  AND uc.id = #{id}
+		  AND p.reg_date = (SELECT
+		                        MAX(p.reg_date)
+		                    FROM
+		                        post p
+		                        ,users u
+		                        ,category c
+		                    WHERE u.id = c.id
+		                      AND p.cate_no = c.cate_no
+		                      AND u.id = #{id})
+		]]>
+	</select> -->
+</mapper>

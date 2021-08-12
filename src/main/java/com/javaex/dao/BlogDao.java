@@ -26,6 +26,8 @@ public class BlogDao {
 	
 	//블로그 베이직 수정
 	public void updateBasic(BlogVo blogVo) {
+		System.out.println(blogVo);
 		sqlSession.update("blog.updateBasic", blogVo);
 	}
+	
 }

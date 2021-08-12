@@ -20,6 +20,12 @@ public class CateDao {
 		return cateList;
 	}
 	
+	//카테고리 관리용 리스트 호출
+	public List<CateVo> selectAmdinCateList(String id) {
+		List<CateVo> adminCateList = sqlSession.selectList("cate.selectAmdinCateList", id);
+		return adminCateList;
+	}
+	
 	//카테고리 추가
 	public int insertCate(CateVo cateVo) {
 		int iCount = sqlSession.insert("cate.insertCate", cateVo);
@@ -30,6 +36,12 @@ public class CateDao {
 	public CateVo selectCate(int cateNo) {
 		CateVo cateVo = sqlSession.selectOne("cate.selectCate", cateNo);
 		return cateVo;
+	}
+	
+	//카테고리 하나의 카운트 가져오기
+	public int selectCateCnt(int cateNo) {
+		int cnt = sqlSession.selectOne("cate.selectCateCnt", cateNo);
+		return cnt;
 	}
 	
 	//카테고리 삭제

@@ -21,6 +21,8 @@ public class UserService {
 	@Autowired
 	private CateDao cateDao;
 	
+	//////////////////////////////// user - join ////////////////////////////////
+
 	//회원가입
 	public boolean join(UserVo userVo) {
 		
@@ -67,15 +69,24 @@ public class UserService {
 		
 	}
 	
+	//////////////////////////////// user - join ////////////////////////////////
+
+	
+	//////////////////////////////// user - login&out ////////////////////////////////
+
 	//로그인
 	public UserVo login(UserVo userVo) {
 		UserVo authUser = userDao.selectLogin(userVo);
+		//로그인 성공 시
 		if(authUser != null) {
 			return authUser;
+		//로그인 실패 시
 		} else {
 			return null;
 		}
 		
 	}
+	
+	//////////////////////////////// user - login&out ////////////////////////////////
 	
 }

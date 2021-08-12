@@ -19,12 +19,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	//////////////////////////////// user - join ////////////////////////////////
+
 	//회원가입 화면
 	@RequestMapping(value="/joinForm", method = {RequestMethod.GET, RequestMethod.POST})
 	public String joinForm() {
 		return "/user/joinForm";
 	}
-
+	
 	//회원가입
 	@RequestMapping(value="/join", method = {RequestMethod.GET, RequestMethod.POST})
 	public String join(@ModelAttribute UserVo userVo) {
@@ -43,9 +45,15 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value="/idCheck", method = {RequestMethod.GET, RequestMethod.POST})
 	public boolean idCheck(@ModelAttribute UserVo userVo) {
-		return userService.idCheck(userVo);
+		boolean idCheck = userService.idCheck(userVo);
+		return idCheck;
 	}
+
+	//////////////////////////////// user - join ////////////////////////////////
+
 	
+	//////////////////////////////// user - login&out ////////////////////////////////
+
 	//로그인 화면
 	@RequestMapping(value="/loginForm", method = {RequestMethod.GET, RequestMethod.POST})
 	public String loginForm() {
@@ -80,4 +88,7 @@ public class UserController {
 		
 		return "redirect:/";
 	}
+	
+	//////////////////////////////// user - login&out ////////////////////////////////
+	
 }

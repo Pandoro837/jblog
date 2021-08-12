@@ -18,12 +18,13 @@
 		<c:import url="/WEB-INF/views/includes/blog-header.jsp"></c:import>
 
 		<div id="content">
+
 			<ul id="admin-menu" class="clearfix">
 				<li class="tabbtn"><a href="${pageContext.request.contextPath }/${blogInfo.id}/admin/basic">기본설정</a></li>
 				<li class="tabbtn selected"><a href="${pageContext.request.contextPath }/${blogInfo.id}/admin/category">카테고리</a></li>
-				<li class="tabbtn"><a href="">글작성</a></li>
+				<li class="tabbtn"><a href="${pageContext.request.contextPath }/${blogInfo.id}/admin/writeForm">글작성</a></li>
 			</ul>
-			<!-- //admin-menu -->
+			<!-- admin-menu -->
 
 			<div id="admin-content">
 
@@ -46,17 +47,6 @@
 					</thead>
 					<tbody id="cateList">
 						<!-- 리스트 영역 -->
-						<c:forEach items="${cateList }" var="cateInfo">
-							<tr id="t-${cateInfo.cateNo }">
-								<td>${cateInfo.cateNo }</td>
-								<td>${cateInfo.cateName }</td>
-								<td>포스트 수</td>
-								<td>${cateInfo.description }</td>
-								<td class='text-center'>
-									<img class="btnCateDel" data-no="${cateInfo.cateNo }" src="${pageContext.request.contextPath}/assets/images/delete.jpg">
-								</td>
-							</tr>
-						</c:forEach>
 
 						<!-- 리스트 영역 -->
 					</tbody>
@@ -85,7 +75,7 @@
 			<!-- //admin-content -->
 		</div>
 		<!-- //content -->
-		
+
 		<!-- 개인블로그 푸터 -->
 		<c:import url="/WEB-INF/views/includes/blog-footer.jsp"></c:import>
 
@@ -95,9 +85,37 @@
 
 <script type="text/javascript">
 	//카테고리 추가 - ajax 방식
+	$(document).ready(function(){
+
+		var id = "${blogInfo.id}";
+		
+		$.ajax({
+			//요청 코드
+			url : "${pageContext.request.contextPath}/${blogInfo.id}/admin/category/getList", //데이터를 받을 주소를 입력
+			type : "post", //get, post 데이터를 보낼 때, 방식을 설정
+			contentType : "application/json",
+			data : JSON.stringify(id), //보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
+
+			//데이터를 받는 코드
+			dataType : "json", //데이터를 받는 형식, 일반적인 java코드를 이해하지 못하기 때문에 json으로 번역하여 받는다
+
+			// 받아온 cateVo로 이하의 내용 처리
+			success : function(adminCateList) {
+				for(var num = 0; num < adminCateList.length; num++){
+					render(adminCateList[num], "list");
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				// 에러 로그는 아래처럼 확인해볼 수 있다. 
+				alert("업로드 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+			}
+		});
+		
+	});
+	
 	$("#btnAddCate").on("click", function() {
 		event.preventDefault();
-		
+
 		//CateVo 생성
 		var CateVo = {
 			id : "${blogInfo.id}",
@@ -109,80 +127,85 @@
 		$.ajax({
 			//요청 코드
 			url : "${pageContext.request.contextPath}/${blogInfo.id}/admin/category/add", //데이터를 받을 주소를 입력
-			type : "post", 					//get, post 데이터를 보낼 때, 방식을 설정
+			type : "post", //get, post 데이터를 보낼 때, 방식을 설정
 			contentType : "application/json",
-			data : JSON.stringify(CateVo), 	//보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
+			data : JSON.stringify(CateVo), //보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
 
 			//데이터를 받는 코드
 			dataType : "json", //데이터를 받는 형식, 일반적인 java코드를 이해하지 못하기 때문에 json으로 번역하여 받는다
-			
+
 			// 받아온 cateVo로 이하의 내용 처리
 			success : function(cateVo) {
-				render(cateVo);
+				render(cateVo, "add");
+				$("[name=name]").val("");
+				$("[name=desc]").val("");
 			},
-			error : function(jqXHR, textStatus,
-					errorThrown) {
+			error : function(jqXHR, textStatus, errorThrown) {
 				// 에러 로그는 아래처럼 확인해볼 수 있다. 
-				alert("업로드 에러\ncode : " + jqXHR.status
-						+ "\nerror message : "
-						+ jqXHR.responseText);
+				alert("업로드 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
 			}
 		});
 
 	})
-	
+
 	//카테고리 삭제 - ajax 방식
-	$("#cateList").on("click", ".btnCateDel",function(){
-	
+	$("#cateList").on("click", ".btnCateDel", function() {
 		//삭제할 카테고리 넘버 획득
 		var cateNo = $(this).data("no");
+		
+		//count 값을 dataset에 넣지 않는 이유 : 가변형 값은 되도록이면 지정하여 넣지 않는다
+		//외부에서 삭제 가능한 게시판일 경우, count등 유동적인 값은 외부 요인으로 변경될 요지가 있다
 		
 		//ajax 요청
 		$.ajax({
 			//요청 코드
 			url : "${pageContext.request.contextPath}/${blogInfo.id}/admin/category/delete", //데이터를 받을 주소를 입력
-			type : "post", 					//get, post 데이터를 보낼 때, 방식을 설정
+			type : "post", //get, post 데이터를 보낼 때, 방식을 설정
 			contentType : "application/json",
-			data : JSON.stringify(cateNo), 	//보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
+			data : JSON.stringify(cateNo), //보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
 
 			//데이터를 받는 코드
 			dataType : "json", //데이터를 받는 형식, 일반적인 java코드를 이해하지 못하기 때문에 json으로 번역하여 받는다
-			
+
 			// 받아온 결과로 이하의 내용 처리
 			success : function(success) {
-				
-				if(success === true) {
+
+				if (success === true) {
 					$("#t-" + cateNo).remove();
+				} else if(success === false) {
+					alert("해당 카테고리에 포스트가 남아있어 삭제할 수 없습니다.")
 				}
-				
+
 			},
-			error : function(jqXHR, textStatus,
-					errorThrown) {
+			error : function(jqXHR, textStatus, errorThrown) {
 				// 에러 로그는 아래처럼 확인해볼 수 있다. 
-				alert("업로드 에러\ncode : " + jqXHR.status
-						+ "\nerror message : "
-						+ jqXHR.responseText);
+				alert("업로드 에러\ncode : " + jqXHR.status	+ "\nerror message : " + jqXHR.responseText);
 			}
 		});
-		
-	})	;
 	
+	
+	});
+
 	//카테고리 렌더링용 함수
-	function render(cateVo) {
+	function render(cateVo, type) {
 		var str = "";
 		str += '<tr id="t-'+ cateVo.cateNo +'">';
 		str += '	<td>' + cateVo.cateNo + '</td>';
 		str += '	<td>' + cateVo.cateName + '</td>';
-		str += '	<td>포스트 수</td>';
+		str += '	<td>' + cateVo.count + '</td>';
 		str += '	<td>' + cateVo.description + '</td>';
 		str += '	<td class="text-center">';
 		str += '		<img class="btnCateDel" data-no="'+ cateVo.cateNo +'" src="${pageContext.request.contextPath}/assets/images/delete.jpg">';
 		str += '	</td>';
 		str += '</tr>';
 
-		$("#cateList").prepend(str);
+		if(type === "list") {
+			$("#cateList").append(str);
+		} else if (type === "add") {
+			$("#cateList").prepend(str);
+		}
+		
 	}
-	
 </script>
 
 </html>

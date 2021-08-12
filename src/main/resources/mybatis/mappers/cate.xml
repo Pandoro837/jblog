@@ -5,6 +5,7 @@
 	<resultMap type="CateVo" id="resultMapCateVo">
 		<result column="id" property="id"/>
 		<result column="cate_no" property="cateNo"/>
+		<result column="cnt" property="count"/>
 		<result column="cate_name" property="cateName"/>
 		<result column="description" property="description"/>
 		<result column="reg_date" property="regDate"/>
@@ -14,12 +15,40 @@
 	<select id="selectCateList" parameterType="String" resultMap="resultMapCateVo">
 		<![CDATA[
 			SELECT
-				 cate_no
-				,cate_name
-				,description
+			     c.cate_no
+			    ,c.cate_name
 			FROM
-				 category
-			WHERE id = #{id}
+				category c
+			WHERE c.id = #{id}
+			ORDER BY reg_date DESC
+		]]>
+	</select>
+	
+	<!-- 카테고리 관리용 리스트 호출 -->
+	<select id="selectAmdinCateList" parameterType="String" resultMap="resultMapCateVo">
+		<![CDATA[
+			SELECT
+			     c.cate_no
+			    ,cc.cnt
+			    ,c.cate_name
+			    ,c.description
+			FROM
+			      category c
+			     ,(SELECT
+			          bc.no no
+			         ,COUNT(p.cate_no) cnt
+			       FROM
+			          post p
+			         ,(SELECT
+			             ct.cate_no no
+			           FROM
+			             category ct
+			            ,blog b
+			           WHERE ct.id = b.id
+			             AND b.id = #{id}) bc
+			       WHERE p.cate_no(+) = bc.no
+			       GROUP BY bc.no) cc
+			WHERE c.cate_no = cc.no
 			ORDER BY reg_date DESC
 		]]>
 	</select>
@@ -50,12 +79,33 @@
 	<select id="selectCate" parameterType="int" resultMap="resultMapCateVo">
 		<![CDATA[
 			SELECT
-				 cate_no
-				,cate_name
-				,description
+			     c.cate_no
+			    ,cate_name
+			    ,description
+			    ,NVL(p.cnt, 0) cnt
 			FROM
-				 category
-			WHERE cate_no = #{cateNo}
+			       category c
+			      ,(SELECT
+			            cate_no
+			            ,COUNT(*) cnt
+			        FROM
+			            post
+			        GROUP BY cate_no) p
+			WHERE c.cate_no = p.cate_no(+)
+			  AND c.cate_no = #{cateNo}
+		]]>
+	</select>
+	
+	<!-- 카테고리 하나의 카운트 가져오기 -->
+	<select id="selectCateCnt" parameterType="int" resultType="int">
+		<![CDATA[
+			SELECT
+			    COUNT(p.cate_no)
+			FROM
+			     category c
+			    ,post p
+			WHERE c.cate_no = p.cate_no
+			  AND c.cate_no = #{cateNo}
 		]]>
 	</select>
 	

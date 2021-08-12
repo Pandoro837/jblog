@@ -33,7 +33,7 @@
 			     blog b
 			    ,users u
 			WHERE b.id = u.id
-			  AND b.id = #{id}
+			  AND id = #{id}
 		]]>
 	</select>
 	

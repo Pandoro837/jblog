@@ -39,7 +39,9 @@
 	<select id="selectLogin" parameterType="UserVo" resultMap="resultMapUserVo">
 		<![CDATA[
 			SELECT
-			    *
+			     user_no
+			    ,user_name
+			    ,id
 			FROM
 			    users
 			WHERE id = #{id}

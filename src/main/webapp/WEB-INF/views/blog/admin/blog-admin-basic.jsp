@@ -13,61 +13,60 @@
 
 <body>
 	<div id="wrap">
-		
+
 		<!-- 개인블로그 해더 -->
 		<c:import url="/WEB-INF/views/includes/blog-header.jsp"></c:import>
 
 		<div id="content">
+
 			<ul id="admin-menu" class="clearfix">
 				<li class="tabbtn selected"><a href="${pageContext.request.contextPath }/${blogInfo.id}/admin/basic">기본설정</a></li>
 				<li class="tabbtn"><a href="${pageContext.request.contextPath }/${blogInfo.id}/admin/category">카테고리</a></li>
-				<li class="tabbtn"><a href="">글작성</a></li>
+				<li class="tabbtn"><a href="${pageContext.request.contextPath }/${blogInfo.id}/admin/writeForm">글작성</a></li>
 			</ul>
-			<!-- //admin-menu -->
-			
+			<!-- admin-menu -->
+
 			<div id="admin-content">
 				<form action="${pageContext.request.contextPath }/${blogInfo.id }/update/basic" method="post" enctype="multipart/form-data">
-	 		      	<table id="admin-basic">
-	 		      		<colgroup>
+					<table id="admin-basic">
+						<colgroup>
 							<col style="width: 100px;">
 							<col style="">
 						</colgroup>
-			      		<tr>
-			      			<td><label for="textTitle">블로그 제목</label></td>
-			      			<td><input id="textTitle" type="text" name="blogTitle" value="${blogInfo.blogTitle }"></td>
-			      		</tr>
-			      		<tr>
-			      			<td><label>로고이미지</label></td>
-			      			<td class="text-left">
-				      			<c:choose>
-				      				<c:when test="${blogInfo.logoFile eq 'spring-logo.jpg'}">
+						<tr>
+							<td><label for="textTitle">블로그 제목</label></td>
+							<td><input id="textTitle" type="text" name="blogTitle" value="${blogInfo.blogTitle }"></td>
+						</tr>
+						<tr>
+							<td><label>로고이미지</label></td>
+							<td class="text-left"><c:choose>
+									<c:when test="${blogInfo.logoFile eq 'spring-logo.jpg'}">
 										<img id="proImg" src="${pageContext.request.contextPath}/assets/images/spring-logo.jpg">
 									</c:when>
 									<c:otherwise>
-				      					<img src="${pageContext.request.contextPath}/images/${blogInfo.logoFile}">
+										<img src="${pageContext.request.contextPath}/images/${blogInfo.logoFile}">
 									</c:otherwise>
-				      			</c:choose>
-			      			</td>   
-			      		</tr>      		
-			      		<tr>
-			      			<td>&nbsp;</td>
-			      			<td><input id="textLogo" type="file" name="file" ></td>      			
-			      		</tr>           		
-			      	</table>
-			      	<div id="btnArea">
-			      		<button class="btn_l" type="submit" >기본설정변경</button>
-			      	</div>
+								</c:choose></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td><input id="textLogo" type="file" name="file"></td>
+						</tr>
+					</table>
+					<div id="btnArea">
+						<button class="btn_l" type="submit">기본설정변경</button>
+					</div>
 				</form>
-			
+
 			</div>
 			<!-- //admin-content -->
-		</div>	
+		</div>
 		<!-- //content -->
-		
-		
+
+
 		<!-- 개인블로그 푸터 -->
 		<c:import url="/WEB-INF/views/includes/blog-footer.jsp"></c:import>
-	
+
 	</div>
 	<!-- //wrap -->
 </body>

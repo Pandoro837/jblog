@@ -14,8 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.dao.BlogDao;
 import com.javaex.dao.CateDao;
+import com.javaex.dao.PostDao;
 import com.javaex.vo.BlogVo;
 import com.javaex.vo.CateVo;
+import com.javaex.vo.PostVo;
 
 @Service
 public class BlogService {
@@ -25,6 +27,9 @@ public class BlogService {
 	
 	@Autowired
 	private CateDao cateDao;
+
+	@Autowired
+	private PostDao postDao;
 	
 	//블로그 호출
 	public BlogVo getBlog(String id) {
@@ -32,6 +37,38 @@ public class BlogService {
 		return blogVo;
 	}
 
+	//카테고리 리스트 호출
+	public List<CateVo> getCateList(String id) {
+		List<CateVo> cateList = cateDao.selectCateList(id);
+		return cateList;
+	}
+	
+	//카테고리에 해당하는 최근 포스트 호출
+	public PostVo getCrtPost(int cateNo) {
+		PostVo crtPost = postDao.selectCrtPost(cateNo);
+		return crtPost;
+	}
+	
+	//해당 카테고리의 포스트 목록
+	public List<PostVo> getPostList(int cateNo) {
+		List<PostVo> postList = postDao.selectPostList(cateNo);
+		return postList;
+	}
+	
+	//포스트 번호로 포스트 호출
+	public PostVo getPost(int postNo) {
+		PostVo crtPost = postDao.selectPost(postNo);
+		return crtPost;
+	}
+	
+	//아이디로 가장 최근의 포스트 하나 호출
+//	public PostVo getCrtPost(String id) {
+//		PostVo crtPost = postDao.selectCrtPost(id);
+//		return crtPost;
+//	}
+
+	//////////////////////////////// blog admin - basic  ////////////////////////////////
+	
 	//이미지 파일 수정
 	public String restore(MultipartFile file) {
 		
@@ -71,9 +108,10 @@ public class BlogService {
 	
 	//블로그 베이직 수정
 	public void blogUpdate(BlogVo blogVo, MultipartFile file) {
+		System.out.println(file + "서비스");
 		
-		if(file.getOriginalFilename() != "" ) {
-			System.out.println(file.getOriginalFilename());
+		//이미지 수정 시 작동
+		if(!file.isEmpty()) {
 			String logoFile = this.restore(file);
 			blogVo.setLogoFile(logoFile);
 		}
@@ -81,10 +119,15 @@ public class BlogService {
 		blogDao.updateBasic(blogVo);
 	}
 	
-	//카테고리 리스트 호출
-	public List<CateVo> getCate(String id) {
-		List<CateVo> cateList = cateDao.selectCateList(id);
-		return cateList;
+	//////////////////////////////// blog admin - basic  ////////////////////////////////
+
+	
+	//////////////////////////////// blog admin - category ////////////////////////////////
+	
+	//카테고리 관리용 리스트 호출
+	public List<CateVo> getAdminCateList(String id) {
+		List<CateVo> adminCateList = cateDao.selectAmdinCateList(id);
+		return adminCateList;
 	}
 	
 	//카테고리 추가
@@ -104,13 +147,34 @@ public class BlogService {
 		
 		boolean success = false;
 		
-		int iCount = cateDao.deleteCate(cateNo);
+		//카테고리의 카운트 비교
+		int cateCnt = cateDao.selectCateCnt(cateNo);
 		
-		if(iCount == 1) {
-			success = true;
-		}
-		
+		//카테고리의 포스트 수가 0일때
+		if(cateCnt == 0) {
+			//카테고리 삭제
+			int iCount = cateDao.deleteCate(cateNo);
+			
+			if(iCount == 1) {
+				success = true;
+			}
+		} 
+
 		return success;
 	}
+
+	//////////////////////////////// blog admin - category ////////////////////////////////
+
 	
+	//////////////////////////////// blog admin - post ////////////////////////////////
+
+	//포스트 저장
+	public void addPost(PostVo postVo) {
+		
+		postDao.insertPost(postVo);
+		
+	}
+	
+	//////////////////////////////// blog admin - post ////////////////////////////////
+
 }
