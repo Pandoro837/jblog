@@ -61,16 +61,10 @@ public class BlogService {
 		return crtPost;
 	}
 	
-	//아이디로 가장 최근의 포스트 하나 호출
-//	public PostVo getCrtPost(String id) {
-//		PostVo crtPost = postDao.selectCrtPost(id);
-//		return crtPost;
-//	}
-
 	//////////////////////////////// blog admin - basic  ////////////////////////////////
 	
 	//이미지 파일 수정
-	public String restore(MultipartFile file) {
+	public String restoreImg(MultipartFile file) {
 		
 		//이미지 파일 저장 위치
 		String saveDirectory = "C:\\JavaStudy\\upload\\jblog";
@@ -108,11 +102,9 @@ public class BlogService {
 	
 	//블로그 베이직 수정
 	public void blogUpdate(BlogVo blogVo, MultipartFile file) {
-		System.out.println(file + "서비스");
-		
 		//이미지 수정 시 작동
 		if(!file.isEmpty()) {
-			String logoFile = this.restore(file);
+			String logoFile = this.restoreImg(file);
 			blogVo.setLogoFile(logoFile);
 		}
 		
@@ -144,7 +136,6 @@ public class BlogService {
 	
 	//카테고리 삭제
 	public boolean deleteCate(int cateNo) {
-		
 		boolean success = false;
 		
 		//카테고리의 카운트 비교
@@ -170,9 +161,7 @@ public class BlogService {
 
 	//포스트 저장
 	public void addPost(PostVo postVo) {
-		
 		postDao.insertPost(postVo);
-		
 	}
 	
 	//////////////////////////////// blog admin - post ////////////////////////////////

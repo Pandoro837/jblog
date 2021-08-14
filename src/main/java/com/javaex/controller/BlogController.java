@@ -55,10 +55,6 @@ public class BlogController {
 		//해당 카테고리의 포스트 목록
 		List<PostVo> crtPostList = blogService.getPostList(crtCate);
 		
-		//아이디로 가장 최근의 포스트 하나 호출
-//		PostVo crtPost = blogService.getCrtPost(id);
-//		System.out.println(crtPost);
-		
 		model.addAttribute("blogInfo", blogInfo);
 		model.addAttribute("cateList", cateList);
 		model.addAttribute("crtPost", crtPost);
@@ -82,8 +78,6 @@ public class BlogController {
 	//블로그 베이직 수정
 	@RequestMapping(value="/{id}/update/basic", method = {RequestMethod.GET, RequestMethod.POST})
 	public String updateBasic(@ModelAttribute BlogVo blogUpdate, @RequestParam(value = "file") MultipartFile file) {
-		System.out.println("update---------------------------");
-
 		blogService.blogUpdate(blogUpdate, file);
 		return "redirect:/{id}/admin/basic";
 	}

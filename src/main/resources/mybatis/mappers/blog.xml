@@ -31,9 +31,9 @@
 			    ,user_name
 			FROM
 			     blog b
-			    ,users u
+    			,users u
 			WHERE b.id = u.id
-			  AND id = #{id}
+			  AND b.id = #{id}
 		]]>
 	</select>
 	
@@ -43,7 +43,7 @@
 			UPDATE blog SET
 				 blog_title = #{blogTitle}
 		]]>
-		<if test="#{logoFile} != null">
+		<if test="logoFile != null">
 			<![CDATA[
 				,logo_file = #{logoFile}
 			]]>
