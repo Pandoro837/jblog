@@ -38,9 +38,9 @@ public class BlogController {
 	//블로그 메인 보여주기
 	@RequestMapping(value="/{id}", method = {RequestMethod.GET, RequestMethod.POST})
 	public String main(Model model, 
-					@PathVariable("id") String id, 
-					@RequestParam(value="crtCate", required = false, defaultValue = "0") int crtCate, 
-					@RequestParam(value="postNo", required = false, defaultValue = "0") int postNo) {
+		@PathVariable("id") String id, 
+		@RequestParam(value="crtCate", required = false, defaultValue = "0") int crtCate, 
+		@RequestParam(value="postNo", required = false, defaultValue = "0") int postNo) {
 
 		//블로그 찾기
 		BlogVo blogInfo = blogService.getBlog(id);
@@ -60,7 +60,6 @@ public class BlogController {
 		} else {
 			crtPost = postService.getPost(postNo);
 		}
-		
 		
 		//해당 카테고리의 포스트 목록
 		List<PostVo> crtPostList = postService.getPostList(crtCate);
