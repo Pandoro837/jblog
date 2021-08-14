@@ -5,6 +5,7 @@ public class CommentVo {
 	private int cmtNo;
 	private int postNo;
 	private int userNo;
+	private String userName;
 	private String cmtContent;
 	private String regDate;
 	
@@ -35,6 +36,14 @@ public class CommentVo {
 		this.userNo = userNo;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public String getCmtContent() {
 		return cmtContent;
 	}
@@ -53,8 +62,8 @@ public class CommentVo {
 
 	@Override
 	public String toString() {
-		return "CommentVo [cmtNo=" + cmtNo + ", postNo=" + postNo + ", userNo=" + userNo + ", cmtContent=" + cmtContent
-				+ ", regDate=" + regDate + "]";
+		return "CommentVo [cmtNo=" + cmtNo + ", postNo=" + postNo + ", userNo=" + userNo + ", userName=" + userName
+				+ ", cmtContent=" + cmtContent + ", regDate=" + regDate + "]";
 	}
 
 }

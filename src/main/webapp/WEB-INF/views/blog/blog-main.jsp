@@ -75,17 +75,23 @@
 					</c:otherwise>
 				</c:choose>
 				<div id="comment_area">
-					<c:if test="${!empty authUser && !empty crtPost}">
-						<div id="comment_input">
-							<table>
+					<table>
+						<c:if test="${!empty authUser && !empty crtPost}">
+							<div id="comment_input">
 								<tr>
 									<td id="commentId">${authUser.userName }</td>
 									<td><input id="cmtContent" type="text" name="content" value=""></td>
 									<td><button id="commentBtn">저장</button></td>
 								</tr>
-							</table>
-						</div>
-					</c:if>	
+							</div>
+						</c:if>	
+					
+					<!-- 코멘트 출력 영역 -->
+					<div id="commentList">
+						
+					</div>
+					<!-- 코멘트 출력 영역 -->
+					</table>
 				</div>
 				<div id="list">
 					<div id="listTitle" class="text-left">
@@ -126,17 +132,105 @@
 
 <script type="text/javascript">
 	
+	//코멘트 리스트 호출
+	$(document).ready(function(){
+		
+		if(${!empty crtPost}) {
+			console.log("포스트 호출용 메소드");
+			var postNo = $("#postTitle").data("postno");
+			console.log(postNo);
+			
+			//코멘트 리스트를 ajax로 요청
+			$.ajax({
+				//요청 코드
+				url : "${pageContext.request.contextPath}/${blogInfo.id}/cmtList", //데이터를 받을 주소를 입력
+				type : "post", //get, post 데이터를 보낼 때, 방식을 설정
+				contentType : "application/json",
+				data : JSON.stringify(postNo), //보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
+
+				//데이터를 받는 코드
+				dataType : "json", //데이터를 받는 형식, 일반적인 java코드를 이해하지 못하기 때문에 json으로 번역하여 받는다
+
+				// 받아온 cateVo로 이하의 내용 처리
+				success : function(commentList) {
+					if(commentList[0] != null) {
+						for(var num = 0; num < commentList.length; num++){
+							render(commentList[num], "list");
+						}
+					} else {
+						console.log("리스트가 없습니다")
+					}
+				},
+				
+				error : function(jqXHR, textStatus, errorThrown) {
+					// 에러 로그는 아래처럼 확인해볼 수 있다. 
+					alert("업로드 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+				}
+			});
+			
+		}
+		
+	});
+	
+	
+	//코멘트 작성
 	if(${authUser != null}) {
 	
 		$("#commentBtn").on("click", function(){
-			console.log("댓글 버튼 클릭")
-			var userNo = "${authUser.userNo}";
-			var cmtContent = $("#cmtContent").val();
+			console.log("댓글 버튼 클릭");
 			
-			console.log(userNo);
-			console.log(cmtContent);
+			console.log("${authUser.userNo}");
+			console.log($("#cmtContent").val());
+			console.log($("#postTitle").data("postno"));
+			
+			var CommentVo = {
+				userNo : "${authUser.userNo}",
+				postNo : $("#postTitle").data("postno"),
+				cmtContent : $("#cmtContent").val()
+			}
+			
+			//코멘트 추가를 ajax로 요청
+			$.ajax({
+				//요청 코드
+				url : "${pageContext.request.contextPath}/${blogInfo.id}/addCmt", //데이터를 받을 주소를 입력
+				type : "post", //get, post 데이터를 보낼 때, 방식을 설정
+				contentType : "application/json",
+				data : JSON.stringify(CommentVo), //보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
+
+				//데이터를 받는 코드
+				dataType : "json", //데이터를 받는 형식, 일반적인 java코드를 이해하지 못하기 때문에 json으로 번역하여 받는다
+
+				// 받아온 cateVo로 이하의 내용 처리
+				success : function(addedComment) {
+					console.log(addedComment);
+				},
+				
+				error : function(jqXHR, textStatus, errorThrown) {
+					// 에러 로그는 아래처럼 확인해볼 수 있다. 
+					alert("업로드 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+				}
+			});
 			
 		});
+	}
+	
+	function render(commentVo, type){
+		var str='';
+		str+='<tr id="t-' + commentVo.cmtNo + '" class="comment">';
+		str+='	<td>' + commentVo.userName + '</td>';
+		str+='	<td>' + commentVo.cmtContent + '</td>';
+		str+='	<td>' + commentVo.regDate + '</td>';
+		str+='	<td>';
+		str+='		<img class="btnCateDel" data-no="'+ commentVo.cmtNo +'" src="${pageContext.request.contextPath}/assets/images/delete.jpg">'
+		str+='	</td>';
+		str+='</tr>';
+		
+		if(type === "list") {
+			$("#commentList").append(str);
+		} else if(type === "add") {
+			$("#commentList").prepend(str);
+		}
+		
 	}
 	
 </script>

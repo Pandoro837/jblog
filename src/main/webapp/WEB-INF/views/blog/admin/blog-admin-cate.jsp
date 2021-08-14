@@ -84,7 +84,7 @@
 </body>
 
 <script type="text/javascript">
-	//카테고리 추가 - ajax 방식
+	//카테고리 호출 - ajax 방식
 	$(document).ready(function(){
 
 		var id = "${blogInfo.id}";
@@ -113,6 +113,7 @@
 		
 	});
 	
+	//카테고리 추가 - ajax 방식
 	$("#btnAddCate").on("click", function() {
 		event.preventDefault();
 
