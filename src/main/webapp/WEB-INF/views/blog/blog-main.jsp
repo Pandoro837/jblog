@@ -52,7 +52,7 @@
 				<c:choose>
 					<c:when test="${!empty crtPost}">
 						<div id="postBox" class="clearfix">
-							<div id="postTitle" class="text-left">
+							<div id="postTitle" class="text-left" data-postno="${crtPost.postNo }">
 								<strong>${crtPost.postTitle }</strong>
 							</div>
 							<div id="postDate" class="text-left">
@@ -71,16 +71,22 @@
 							<div id="postTitle" class="text-left">
 								<strong>등록된 글이 없습니다.</strong>
 							</div>
-							<div id="postDate" class="text-left">
-								<strong></strong>
-							</div>
-							<div id="postNick"></div>
 						</div>
-
-						<div id="post"></div>
 					</c:otherwise>
 				</c:choose>
-
+				<div id="comment_area">
+					<c:if test="${!empty authUser && !empty crtPost}">
+						<div id="comment_input">
+							<table>
+								<tr>
+									<td id="commentId">${authUser.userName }</td>
+									<td><input id="cmtContent" type="text" name="content" value=""></td>
+									<td><button id="commentBtn">저장</button></td>
+								</tr>
+							</table>
+						</div>
+					</c:if>	
+				</div>
 				<div id="list">
 					<div id="listTitle" class="text-left">
 						<strong>카테고리의 글</strong>
@@ -117,4 +123,22 @@
 	</div>
 	<!-- //wrap -->
 </body>
+
+<script type="text/javascript">
+	
+	if(${authUser != null}) {
+	
+		$("#commentBtn").on("click", function(){
+			console.log("댓글 버튼 클릭")
+			var userNo = "${authUser.userNo}";
+			var cmtContent = $("#cmtContent").val();
+			
+			console.log(userNo);
+			console.log(cmtContent);
+			
+		});
+	}
+	
+</script>
+
 </html>
