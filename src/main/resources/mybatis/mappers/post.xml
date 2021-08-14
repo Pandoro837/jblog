@@ -94,38 +94,4 @@
 		]]>
 	</select>
 	
-	<!-- 아이디로 가장 최근의 포스트 하나 호출 -->
-	<!-- <select id="selectCrtPost" parameterType="String" resultMap="resultMapPostVo">
-		<![CDATA[
-		SELECT
-		     p.post_title
-		    ,p.post_content
-		    ,p.reg_date
-		    ,p.cate_no
-		    ,uc.user_name
-		    ,uc.id
-		FROM
-		     post p
-		    ,(SELECT
-		        c.cate_no
-		        ,c.cate_name
-		        ,u.user_name
-		        ,u.id
-		      FROM
-		         users u
-		        ,category c
-		      WHERE u.id = c.id) uc
-		WHERE p.cate_no = uc.cate_no
-		  AND uc.id = #{id}
-		  AND p.reg_date = (SELECT
-		                        MAX(p.reg_date)
-		                    FROM
-		                        post p
-		                        ,users u
-		                        ,category c
-		                    WHERE u.id = c.id
-		                      AND p.cate_no = c.cate_no
-		                      AND u.id = #{id})
-		]]>
-	</select> -->
 </mapper>

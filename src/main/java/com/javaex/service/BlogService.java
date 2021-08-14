@@ -107,7 +107,6 @@ public class BlogService {
 			String logoFile = this.restoreImg(file);
 			blogVo.setLogoFile(logoFile);
 		}
-		
 		blogDao.updateBasic(blogVo);
 	}
 	
@@ -136,6 +135,7 @@ public class BlogService {
 	
 	//카테고리 삭제
 	public boolean deleteCate(int cateNo) {
+		//성공 여부 확인
 		boolean success = false;
 		
 		//카테고리의 카운트 비교
@@ -150,7 +150,6 @@ public class BlogService {
 				success = true;
 			}
 		} 
-
 		return success;
 	}
 
