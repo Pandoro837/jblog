@@ -75,23 +75,27 @@
 					</c:otherwise>
 				</c:choose>
 				<div id="comment_area">
-					<table>
 						<c:if test="${!empty authUser && !empty crtPost}">
-							<div id="comment_input">
-								<tr>
-									<td id="commentId">${authUser.userName }</td>
-									<td><input id="cmtContent" type="text" name="content" value=""></td>
-									<td><button id="commentBtn">저장</button></td>
-								</tr>
-							</div>
+							<div id = comment_input>
+								<table>
+									<tr>
+										<td id="commentId">${authUser.userName }</td>
+										<td><input id="cmtContent" type="text" name="content" value=""></td>
+										<td><button id="commentBtn">저장</button></td>
+									</tr>
+								</table>
+							</div>	
 						</c:if>	
 					
 					<!-- 코멘트 출력 영역 -->
-					<div id="commentList">
-						
-					</div>
+					<div id="comment_output">
+						<table id="commentList">
+							<tbody>
+							</tbody>
+						</table>
+					</div>						
 					<!-- 코멘트 출력 영역 -->
-					</table>
+					
 				</div>
 				<div id="list">
 					<div id="listTitle" class="text-left">
@@ -136,9 +140,9 @@
 	$(document).ready(function(){
 		
 		if(${!empty crtPost}) {
-			console.log("포스트 호출용 메소드");
+			//console.log("포스트 호출용 메소드");
 			var postNo = $("#postTitle").data("postno");
-			console.log(postNo);
+			//console.log(postNo);
 			
 			//코멘트 리스트를 ajax로 요청
 			$.ajax({
@@ -158,7 +162,8 @@
 							render(commentList[num], "list");
 						}
 					} else {
-						console.log("리스트가 없습니다")
+						//console.log("리스트가 없습니다")
+						$("#comment_output").remove();
 					}
 				},
 				
@@ -177,11 +182,11 @@
 	if(${authUser != null}) {
 	
 		$("#commentBtn").on("click", function(){
-			console.log("댓글 버튼 클릭");
+			//console.log("댓글 버튼 클릭");
 			
-			console.log("${authUser.userNo}");
-			console.log($("#cmtContent").val());
-			console.log($("#postTitle").data("postno"));
+			//console.log("${authUser.userNo}");
+			//console.log($("#cmtContent").val());
+			//console.log($("#postTitle").data("postno"));
 			
 			var CommentVo = {
 				userNo : "${authUser.userNo}",
@@ -202,7 +207,8 @@
 
 				// 받아온 cateVo로 이하의 내용 처리
 				success : function(addedComment) {
-					console.log(addedComment);
+					//console.log(addedComment);
+					render(addedComment, "add");
 				},
 				
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -214,12 +220,14 @@
 		});
 	}
 	
+	//코멘트 삭제
+	
 	function render(commentVo, type){
 		var str='';
 		str+='<tr id="t-' + commentVo.cmtNo + '" class="comment">';
-		str+='	<td>' + commentVo.userName + '</td>';
-		str+='	<td>' + commentVo.cmtContent + '</td>';
-		str+='	<td>' + commentVo.regDate + '</td>';
+		str+='	<td class="cmtName">' + commentVo.userName + '</td>';
+		str+='	<td class="cmtContent">' + commentVo.cmtContent + '</td>';
+		str+='	<td class="cmtRegDate">' + commentVo.regDate + '</td>';
 		str+='	<td>';
 		str+='		<img class="btnCateDel" data-no="'+ commentVo.cmtNo +'" src="${pageContext.request.contextPath}/assets/images/delete.jpg">'
 		str+='	</td>';

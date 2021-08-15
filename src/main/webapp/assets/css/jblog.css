@@ -181,18 +181,24 @@ div#footer		{ color:#666 }
 
 
 /* 개인블로그 오른쪽영역(글리스트) */
-#post_area {}
 #post_area #list #listTitle {width: 100%; margin: 50px 0px 5px 0px; padding: 0px 5px 3px 5px; border-bottom: 1px solid #808080; }
 #post_area #list table {width: 100%; border-collapse: collapse; font-size: 13px;}
 #post_area #list table tr {border-bottom: 1px solid #B7B7B7; }
 #post_area #list table td {padding: 6px 5px 6px 5px; }
 
-/* 개인 블로그 코멘트 영역 */
+/* 개인 블로그 코멘트 입력 영역 */
 #comment_area {width: 100%; margin: 10px 0px 5px 0px;}
 #comment_area #comment_input table {width: 790px; height: 40px; border: 1px solid #B7B7B7;}
 #comment_area #comment_input td {padding: 0px 5px 0px 5px;}
 #comment_area #comment_input table input {width: 650px; border: 1px solid #B7B7B7; height:25px;}
 #comment_area #comment_input table button {width: 50px; height:25px;}
+
+#commentList {width: 790px; border: 1px solid #B7B7B7;}
+#commentList tr {height: 30px;}
+#commentList .cmtName {width: 55px; padding: 0px 5px 0px 5px; text-align: left;}
+#commentList .cmtContent {width: 560px; padding: 0px 5px 0px 5px; text-align: left;}
+#commentList .cmtRegDate {width: 60px; padding: 0px 5px 0px 5px; text-align: left;}
+/* 개인 블로그 코멘트 출력 영역 */
 
 
 /****************************************************************/

@@ -24,7 +24,7 @@ public class CommentDao {
 	public int insertComment(CommentVo commentVo) {
 		sqlSession.insert("comment.insertComment", commentVo);
 		int cmtNo =  commentVo.getCmtNo();
-		System.out.println("DAO cmt No : " + cmtNo);
+//		System.out.println("DAO cmt No : " + cmtNo);
 		return cmtNo;
 	}
 	
