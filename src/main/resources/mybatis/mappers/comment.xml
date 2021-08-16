@@ -16,6 +16,7 @@
 		<![CDATA[
 			SELECT
 				 u.user_name
+				,c.cmt_no
 				,c.user_no
 				,c.cmt_content
 				,TO_CHAR(c.reg_date,'YY/MM/DD') reg_date
@@ -50,10 +51,12 @@
 		]]>
 	</insert>
 	
+	<!-- 코멘트 넘버로 코멘트 찾기 -->
 	<select id="selectComment" parameterType="int" resultMap="resultMapCommentVo">
 		<![CDATA[
 			SELECT
 				 u.user_name
+				,cmt_no
 				,c.user_no
 				,c.cmt_content
 				,TO_CHAR(c.reg_date,'YY/MM/DD') reg_date
@@ -64,5 +67,13 @@
 			  AND c.cmt_no = #{cmtNo}
 		]]>
 	</select>
+	
+	<!-- 코멘트 삭제 -->
+	<delete id="deleteComment" parameterType="int">
+		<![CDATA[
+			DELETE comments
+			WHERE cmt_no = #{cmtNo}
+		]]>
+	</delete>
 	
 </mapper>

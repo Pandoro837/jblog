@@ -89,8 +89,8 @@
 					
 					<!-- 코멘트 출력 영역 -->
 					<div id="comment_output">
-						<table id="commentList">
-							<tbody>
+						<table>
+							<tbody id="commentList">
 							</tbody>
 						</table>
 					</div>						
@@ -161,10 +161,7 @@
 						for(var num = 0; num < commentList.length; num++){
 							render(commentList[num], "list");
 						}
-					} else {
-						//console.log("리스트가 없습니다")
-						$("#comment_output").remove();
-					}
+					} 
 				},
 				
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -184,9 +181,9 @@
 		$("#commentBtn").on("click", function(){
 			//console.log("댓글 버튼 클릭");
 			
-			//console.log("${authUser.userNo}");
-			//console.log($("#cmtContent").val());
-			//console.log($("#postTitle").data("postno"));
+			console.log("${authUser.userNo}");
+			console.log($("#cmtContent").val());
+			console.log($("#postTitle").data("postno"));
 			
 			var CommentVo = {
 				userNo : "${authUser.userNo}",
@@ -207,7 +204,7 @@
 
 				// 받아온 cateVo로 이하의 내용 처리
 				success : function(addedComment) {
-					//console.log(addedComment);
+					console.log(addedComment);
 					render(addedComment, "add");
 				},
 				
@@ -221,16 +218,53 @@
 	}
 	
 	//코멘트 삭제
+	$("#commentList").on("click", "img", function(){
+		console.log("삭제버튼 클릭");
+		console.log(this);
+		
+		var cmtNo = $(this).data("no");
+		console.log(cmtNo);
+		
+		$.ajax({
+			//요청 코드
+			url : "${pageContext.request.contextPath}/${blogInfo.id}/deleteCmt", //데이터를 받을 주소를 입력
+			type : "post", //get, post 데이터를 보낼 때, 방식을 설정
+			contentType : "application/json",
+			data : JSON.stringify(cmtNo), //보내는 데이터의 형식, 객체를 생성하여 집어넣어도 된다
+
+			//데이터를 받는 코드
+			dataType : "json", //데이터를 받는 형식, 일반적인 java코드를 이해하지 못하기 때문에 json으로 번역하여 받는다
+
+			// 받아온 cateVo로 이하의 내용 처리
+			success : function(success) {
+				console.log(success);
+				if(success === true) {
+					$("#t-"+ cmtNo).remove();
+				}
+			},
+			
+			error : function(jqXHR, textStatus, errorThrown) {
+				// 에러 로그는 아래처럼 확인해볼 수 있다. 
+				alert("업로드 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+			}
+		});
+		
+	});
 	
 	function render(commentVo, type){
+		
 		var str='';
 		str+='<tr id="t-' + commentVo.cmtNo + '" class="comment">';
 		str+='	<td class="cmtName">' + commentVo.userName + '</td>';
 		str+='	<td class="cmtContent">' + commentVo.cmtContent + '</td>';
 		str+='	<td class="cmtRegDate">' + commentVo.regDate + '</td>';
-		str+='	<td>';
-		str+='		<img class="btnCateDel" data-no="'+ commentVo.cmtNo +'" src="${pageContext.request.contextPath}/assets/images/delete.jpg">'
-		str+='	</td>';
+		//예외를 방지하기 위해 ${authUser.userNo}를 문자열로 만들면 일치 비교가 불가능하다
+		//문자열로 선언하지 않으면, 공란이 되기 때문에 로그인 하지 않으면 오류 발생
+		if("${authUser.userNo}" == commentVo.userNo ) {		
+			str+='	<td>';
+			str+='		<img class="btnCateDel" data-no="'+ commentVo.cmtNo +'" src="${pageContext.request.contextPath}/assets/images/delete.jpg">';
+			str+='	</td>';
+		} 
 		str+='</tr>';
 		
 		if(type === "list") {

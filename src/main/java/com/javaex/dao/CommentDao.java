@@ -24,14 +24,20 @@ public class CommentDao {
 	public int insertComment(CommentVo commentVo) {
 		sqlSession.insert("comment.insertComment", commentVo);
 		int cmtNo =  commentVo.getCmtNo();
-//		System.out.println("DAO cmt No : " + cmtNo);
+		System.out.println("DAO cmt No : " + cmtNo);
 		return cmtNo;
 	}
 	
 	//코멘트 넘버로 코멘트 찾기
-	public CommentVo selectComment(int cmtNo) {
-		CommentVo addedComment = sqlSession.selectOne("comment.selectComment", cmtNo);
+	public CommentVo selectComment(int commentNo) {
+		CommentVo addedComment = sqlSession.selectOne("comment.selectComment", commentNo);
 		return addedComment;
+	}
+	
+	//코멘트 삭제
+	public int deleteComment(int commentNo) {
+		int iCount = sqlSession.delete("comment.deleteComment", commentNo);
+		return iCount;
 	}
 	
 }

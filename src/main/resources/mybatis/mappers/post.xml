@@ -75,7 +75,8 @@
 	<select id="selectPost" parameterType="int" resultMap="resultMapPostVo">
 		<![CDATA[
 			SELECT
-			     p.post_title
+				 p.post_no
+			    ,p.post_title
 			    ,p.post_content
    			    ,TO_CHAR(p.reg_date,'YYYY/MM/DD') reg_date
 			    ,uc.user_name
